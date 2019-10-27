@@ -1,31 +1,31 @@
 import plotly.graph_objs as go
+import plotly.offline as pl
+import numpy as np
 
 
-data = open('data.txt', 'r')
+data = open('data_500.txt', 'r')
 
-X1 = []
-Y1 = []
-X2 = []
-Y2 = []
-X3 = []
-Y3 = []
+N = 3
+X = [[] for i in range(N)]
+Y = [[] for i in range(N)]
+Z = [[] for i in range(N)]
 
 i = 0
 for line in data:
-    if i % 10 == 0:
-        X1.append(line.split()[0])
-        Y1.append(line.split()[1])
-        X2.append(line.split()[3])
-        Y2.append(line.split()[4])
-        X3.append(line.split()[6])
-        Y3.append(line.split()[7])
-    i = i+1
+    if i % 100 == 0:
+        for j in range(N):
+            X[j].append(line.split()[j*3])
+            Y[j].append(line.split()[j*3+1])
+            Z[j].append(line.split()[j*3+2])
+    i += 1
 
 data.close()
 
 fig = go.Figure()
-fig.add_trace(go.Scatter(x = X1, y = Y1, mode = 'lines', line = dict(color = 'red')))
-fig.add_trace(go.Scatter(x = X2, y = Y2, mode = 'lines', line = dict(color = 'blue')))
-fig.add_trace(go.Scatter(x = X3, y = Y3, mode = 'lines', line = dict(color = 'green')))
+colors = ['red', 'green', 'blue']
+for i in range(N):
+    fig.add_trace(go.Scatter(x = X[i], y = Y[i], mode = 'lines', line = dict(color = colors[i])))
 
-fig.show()
+
+#fig.show()
+pl.plot(fig, filename="Stars1.html", auto_open=False)
